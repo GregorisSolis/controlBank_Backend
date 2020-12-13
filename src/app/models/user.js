@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
 	email: {type: String, required: true, unique: true, lowercase: true},
 	password: {type: String, required: true, select: false},
 	createdAt: {type: Date, default: Date.now},
-	ahorros:{type: String, initialize: 0}
+	ahorros:{type: String, initialize: 0},
 	salario: {type: String, required: true}
 
 })
