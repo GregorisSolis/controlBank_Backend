@@ -35,7 +35,7 @@ router.post('/register', async(req, res) =>{
 		})
 	}
 	catch(err){
-		return res.status(400).send({ error: "Registration Failed."})
+		return res.status(400).send({ error: "Registration Failed." + err})
 	}
 
 })
@@ -78,17 +78,19 @@ router.get('/info-user/:userId', async(req, res) =>{
 })
 
 //EDITAR INFORMACION DEL USUARIO
-router.put('/edit-user/:userId', async(req, res) =>{
+router.put('/edit-user/:id', async(req, res) =>{
+		
+	const _id = req.params.id
+	const body = req.body
 
 	try{
 
-		const infoUser = await User.findOneAndUpdate(req.params.userId,
-								{ ...req.body, user: req.userId},{ new: true})
+		const infoUserBD = await User.findByIdAndUpdate( _id, body, {new: true})
 
-		return res.send({ infoUser })
+		res.json(infoUserBD)
 
 	}catch(err){
-		return res.status(400).send({ error: 'error edit user.'})
+		return res.status(400).send({ error: 'error edit user.' + err})
 	}
 
 })

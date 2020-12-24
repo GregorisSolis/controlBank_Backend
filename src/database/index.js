@@ -5,4 +5,3 @@ mongoose.connect('mongodb+srv://gregoBank:32perXros27calieZntes45@cluster0.hljav
 mongoose.Promise = global.Promise
 
 module.exports = mongoose
-
