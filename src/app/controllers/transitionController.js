@@ -132,7 +132,7 @@ router.delete('/romeve-transition/:transitionId', async(req, res) =>{
 
 	try{
 
-		await Transition.findOneAndDelete(req.params.transitionId)
+		await Transition.findByIdAndRemove(req.params.transitionId)
 
 		return res.send()
 
