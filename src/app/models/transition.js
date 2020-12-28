@@ -5,6 +5,7 @@ const TransitionSchema = new mongoose.Schema({
 	typeTransition:{ type: String, required: true},
 	createdAt: {type: Date, default: Date.now},
 	idUser:{ type: String, required: true },
+	mesValue:{ type: String, required: true },
 	description: {type: String, required: true}
 })
 
