@@ -1,10 +1,10 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const crypto = require('crypto')
 
 const authConfig = require('../../config/auth')
 const User = require('../models/user')
+const UserGoogle = require('../models/userGoogle')
 
 const router = express.Router()
 
@@ -21,8 +21,10 @@ router.post('/register', async(req, res) =>{
 
 	try{
 
-		if(await User.findOne({ email })){
-			return res.status(400).send({ error: 'User already exists.'})
+		if(await UserGoogle.findOne({ email })){
+			if(User.findOne({ email })){
+				return res.status(400).send({ error: 'User already exists.'})
+			}
 		}
 
 		const user = await User.create(req.body)
