@@ -19,7 +19,7 @@ router.post('/google/register', async(req, res) =>{
 
 		const user = await UserGoogle.create(req.body)
 
-		return res.status(200).send(`fine!`)
+		return res.status(200).send(user)
 	}
 	catch(err){
 		return res.status(400).send({ error: "Registration Failed." + err})
