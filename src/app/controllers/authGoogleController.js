@@ -44,4 +44,24 @@ router.get('/google/info/:googleId', async(req, res) => {
 	}
 })
 
+//EDITAR LA DATA DEL USERGOOGLE
+
+router.put('/google/info-edit/:googleId', async(req, res) =>{
+
+	const googleID = req.params.googleId
+	const body = req.body
+
+	try{
+
+		const infoProfile = await UserGoogle.findOneAndUpdate( googleID, body, {new: true})
+
+		res.json(infoProfile)
+
+	}
+	catch(err){
+		return res.status(400).json('Error update userGoogle ' + err)
+	}
+
+})
+
 module.exports = app => app.use('/auth', router)
