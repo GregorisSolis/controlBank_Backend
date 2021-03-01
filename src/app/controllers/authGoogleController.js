@@ -35,7 +35,7 @@ router.get('/google/info/:googleId', async(req, res) => {
 	try{
 		const infoProfile = await UserGoogle.find({ googleId: req.params.googleId})
 
-		return res.send({ infoProfile })
+		return res.send(infoProfile)
 	}
 	catch(err){
 		return res.status(400).send({ error: 'error loanding user info.'})
