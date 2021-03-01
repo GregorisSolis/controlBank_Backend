@@ -1,8 +1,17 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
+const authConfig = require('../../config/auth')
+
 const User = require('../models/user')
 const UserGoogle = require('../models/userGoogle')
 
 const router = express.Router()
+
+function generateToken(params = {}){
+  return jwt.sign(params, authConfig.secret, {
+		expiresIn: 86400,
+})}
+
 
 //REGISTER USER
 router.post('/google/register', async(req, res) =>{
@@ -19,7 +28,10 @@ router.post('/google/register', async(req, res) =>{
 
 		const user = await UserGoogle.create(req.body)
 
-		return res.status(200).send(user)
+		return res.send({
+			user,
+			token: generateToken({id: "Registration Failed."})
+		})
 	}
 	catch(err){
 		return res.status(400).send({ error: "Registration Failed." + err})
@@ -35,7 +47,11 @@ router.get('/google/info/:googleId', async(req, res) => {
 	try{
 		const infoProfile = await UserGoogle.findOne({ googleId: req.params.googleId})
 
-		return res.json(infoProfile)
+		return res.send({
+			infoProfile,
+			token: generateToken({ id: infoProfile.id})
+		})
+
 	}
 	catch(err){
 		return res.status(400).send({ error: 'error loanding user info.'})
