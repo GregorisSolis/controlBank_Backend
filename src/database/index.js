@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://gregoBank:32perXros27calieZntes45@cluster0.hljav.mongodb.net/Controlbank', 
+mongoose.connect('', 
 	{useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
 mongoose.Promise = global.Promise
 
