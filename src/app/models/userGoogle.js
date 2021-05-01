@@ -6,7 +6,8 @@ const UserGoogleSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, lowercase: true },
     createdAt: { type: Date, default: Date.now },
     ahorros: { type: String, initialize: 0 },
-    salario: { type: String, initialize: 0 }
+    salario: { type: String, initialize: 0 },
+    score: {type: Number, initialize: 0}
 })
 
 UserGoogleSchema.pre('save', async function (next) {

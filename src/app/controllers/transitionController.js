@@ -12,7 +12,7 @@ router.post('/new-transition', async (req, res) => {
 
 	try {
 
-		const transition = await Transition.create(req.body)
+		const transition = await Transition.create({ ...req.body, user: req.userId })
 
 		return res.send({ transition })
 	}
@@ -21,47 +21,44 @@ router.post('/new-transition', async (req, res) => {
 	}
 })
 
+//BUSCAR TYPETRANSITION ESPESIFICA POR USUARIO
+router.get('/transitions/todos/:IDUSER', async (req, res) => {
+	try{
+		const trans = await Transition.find({ user: req.params.IDUSER })
+
+		return res.send({ trans })
+	}
+	catch(err){
+		return res.status(400).send({ error: "error loading typeTransition. " })
+	}
+})
+
+//BUSCAR TYPETRANSITION ESPESIFICA
+router.get('/typeTransition/:type/:userId', async (req, res) => {
+	try{
+		const type = await Transition.find({ typeTransition: req.params.type, user: req.params.userId})
+
+		return res.send({ type })
+	}
+	catch(err){
+		return res.status(400).send({ error: "error loading typeTransition. " })
+	}
+})
+
+
 //MUESTRA TODAS LAS TRANSITION
 router.get('/todos', async (req, res) => {
 
 	try {
 
-		const transitions = await Transition.find()
+		const transitions = await Transition.find().populate('user')
 
 		return res.send({ transitions })
 
 	} catch (err) {
-		return res.status(400).send({ error: "error loading transitions." })
+		return res.status(400).send({ error: "error loading transitions." + err})
 	}
 
-})
-
-//TYPETRANSITION "Gastos"
-router.get('/typeTransition/Gastos', async (req, res) => {
-
-	try {
-
-		const typeTransition = await Transition.find({ typeTransition: /Gasto/ })
-
-		return res.send({ typeTransition })
-
-	} catch (err) {
-		return res.status(400).send({ error: "error loading typeTransition - Gastos." })
-	}
-})
-
-//TYPETRANSITION "Gastos Fijos"
-router.get('/typeTransition/GastosFijos', async (req, res) => {
-
-	try {
-
-		const typeTransition = await Transition.find({ typeTransition: /GastosFijos/ })
-
-		return res.send({ typeTransition })
-
-	} catch (err) {
-		return res.status(400).send({ error: "error loading typeTransition - Gastos Fijos." })
-	}
 })
 
 //EDITAR UNA Transition

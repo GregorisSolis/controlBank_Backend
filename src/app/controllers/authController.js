@@ -79,22 +79,22 @@ router.get('/info-user/:userId', async(req, res) =>{
 	}
 })
 
-//EDITAR INFORMACION DEL USUARIO
-router.put('/edit-user/:id', async(req, res) =>{
-		
-	const _id = req.params.id
-	const body = req.body
+//AGREGAR SCORE AL USER
+router.put('/edit/:userId', async (req, res) => {
 
-	try{
+	try {
 
-		const infoUserBD = await User.findByIdAndUpdate( _id, body, {new: true})
+		const user = await User.findOneAndUpdate(req.params.userId,
+			{ ...req.body}, { new: true })
 
-		res.json(infoUserBD)
+		return res.send({ user })
 
-	}catch(err){
-		return res.status(400).send({ error: 'error edit user.' + err})
+	} catch (err) {
+
+		return res.status(400).send({ error: "error score user" })
+
 	}
-
 })
+
 
 module.exports = app => app.use('/auth', router)
