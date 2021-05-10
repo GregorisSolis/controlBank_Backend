@@ -39,13 +39,34 @@ router.post('/google/register', async(req, res) =>{
 
 })
 
-//INFO USER
+//INFO USER auth
 router.get('/google/info/:googleId', async(req, res) => {
 
 		const ID = req.params.googleId
 
 	try{
 		const infoProfile = await UserGoogle.findOne({ googleId: req.params.googleId})
+
+		return res.send({
+			infoProfile,
+			token: generateToken({ id: infoProfile.id})
+		})
+
+	}
+	catch(err){
+		return res.status(400).send({ error: 'error loanding user info.'})
+
+		console.log(err)
+	}
+})
+
+//INFO USER profile
+router.get('/google/profile/:googleId', async(req, res) => {
+
+		const ID = req.params.googleId
+
+	try{
+		const infoProfile = await UserGoogle.findOne({ _id: req.params.googleId})
 
 		return res.send({
 			infoProfile,
