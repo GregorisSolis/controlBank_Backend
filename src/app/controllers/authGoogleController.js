@@ -45,7 +45,7 @@ router.get('/google/info/:googleId', async(req, res) => {
 		const ID = req.params.googleId
 
 	try{
-		const infoProfile = await UserGoogle.findOne({ googleId: req.params.googleId})
+		const infoProfile = await UserGoogle.findOne({ _id: req.params.googleId})
 
 		return res.send({
 			infoProfile,
@@ -85,12 +85,11 @@ router.get('/google/profile/:googleId', async(req, res) => {
 
 router.put('/google/info-edit/:googleId', async(req, res) =>{
 
-	const googleID = req.params.googleId
 	const body = req.body
 
 	try{
 
-		const infoProfile = await UserGoogle.findOneAndUpdate( googleID, body, {new: true})
+		const infoProfile = await UserGoogle.findByIdAndUpdate( req.params.googleId, body, {new: true})
 
 		res.json(infoProfile)
 
