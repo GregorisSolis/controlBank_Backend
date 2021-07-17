@@ -42,10 +42,8 @@ router.post('/google/register', async(req, res) =>{
 //INFO USER auth
 router.get('/google/info/:googleId', async(req, res) => {
 
-		const ID = req.params.googleId
-
 	try{
-		const infoProfile = await UserGoogle.findOne({ _id: req.params.googleId})
+		const infoProfile = await UserGoogle.findOne({ googleId: req.params.googleId})
 
 		return res.send({
 			infoProfile,
