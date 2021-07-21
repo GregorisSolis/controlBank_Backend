@@ -1,6 +1,8 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+const mailer = require('../../modules/mailer')
 
 const authConfig = require('../../config/auth')
 const User = require('../models/user')
@@ -79,7 +81,7 @@ router.get('/info-user/:userId', async(req, res) =>{
 	}
 })
 
-//AGREGAR SCORE AL USER
+//EDITAR EL USER
 router.put('/edit/:userId', async (req, res) => {
 
 	try {
@@ -96,5 +98,85 @@ router.put('/edit/:userId', async (req, res) => {
 	}
 })
 
+//recuperar la contrasena - enviar emal para user
+router.post('/forgot_password', async (req, res) => {
+	const { email } = req.body
+
+	try{
+
+		const user = await User.findOne({ email })
+
+		if(!user){
+			return res.status(400).send({ error: "User not found"})
+		}
+
+		const token = crypto.randomBytes(20).toString('hex')
+		
+		const now = new Date()
+		now.setHours(now.getHours() + 1)
+
+		await User.findByIdAndUpdate(user.id, {
+			'$set': {
+				passwordResetToken: token,
+				passwordResetExpires: now,
+			}
+		})
+		
+		mailer.sendMail({
+			to: email,
+			from: 'empresatuya@test.com',
+			template: '/forgot_password',
+			context: { token }
+
+		}, (err) => {
+			if (err) {
+				console.log(err)
+				return res.status(400).send({ error: 'Cannot send forgot password email'})
+			}
+
+			return res.send()
+		})
+	}
+
+	
+	catch(err){
+		res.status(400).send({ error: 'error on forgot password, try again'})
+	}
+})
+
+//recuperar la contrasena - enviando la nueva contrasena
+router.post('/reset_password', async (req, res) => {
+
+	const { email, token, password } = req.body
+
+	try{
+
+		const user = await User.findOne({ email })
+		.select('+passwordResetToken passwordResetExpires')
+
+		if (!user){
+			return res.status(400).send({ error: "User not found" })
+		}
+
+		if (token !== user.passwordResetToken){
+			return res.status(400).send({ error: "Token Invalid"})
+		}
+
+		const now = new Date()
+
+		if (now > user.passwordResetExpires){
+			return res.status(400).send({ error: "Token expired, generate a new one"})
+		}
+
+		user.password = password
+
+		await user.save()
+
+		res.send()
+	}	
+	catch (err){
+		res.status(400).send({ error: 'Cannot reset password, try again'})
+	}
+})
 
 module.exports = app => app.use('/auth', router)

@@ -8,7 +8,8 @@ const UserSchema = new mongoose.Schema({
 	createdAt: {type: Date, default: Date.now},
 	ahorros:{type: String, initialize: 0},
 	salario: {type: String, initialize: 0},
-	score: {type: Number, initialize: 0}
+	passwordResetToken: { type: String, select: false},
+	passwordResetExpires: { type: Date, select: false }
 })
 
 UserSchema.pre('save', async function(next){
