@@ -81,23 +81,6 @@ router.get('/info-user/:userId', async(req, res) =>{
 	}
 })
 
-//EDITAR EL USER
-router.put('/edit/:userId', async (req, res) => {
-
-	try {
-
-		const user = await User.findOneAndUpdate(req.params.userId,
-			{ ...req.body}, { new: true })
-
-		return res.send({ user })
-
-	} catch (err) {
-
-		return res.status(400).send({ error: "error score user" })
-
-	}
-})
-
 //recuperar la contrasena - enviar emal para user
 router.post('/forgot_password', async (req, res) => {
 	const { email } = req.body
@@ -177,6 +160,49 @@ router.post('/reset_password', async (req, res) => {
 	catch (err){
 		res.status(400).send({ error: 'Cannot reset password, try again'})
 	}
+})
+
+//EDITAR PASS USER
+router.put('/edit_password/:userId', async (req, res) => {
+
+		const { password } = req.body
+
+		try{
+
+			const user = await User.findById(req.params.userId)
+			.select('+password')
+
+			if(!user){
+				res.status(400).send({ error:  'user not found'})
+			}
+
+		user.password = password
+
+		await user.save()
+
+			
+			res.send({ user })
+		}
+		catch(err){
+			res.status(400).send({ Error: err })
+		}
+
+})
+
+//EDITAR DATOS USER 
+
+router.put('/edit/:userId', async (req, res) =>{
+
+	try{
+
+		const user = await User.findOneAndUpdate(req.params.userId,{ ...req.body}, {new: true})
+
+		return res.send({ user })
+
+	}catch(err){
+		res.status(400).send({ error: err })
+	}
+
 })
 
 module.exports = app => app.use('/auth', router)
