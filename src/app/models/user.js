@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema({
 	ahorros:{type: String, initialize: 0},
 	salario: {type: String, initialize: 0},
 	passwordResetToken: { type: String, select: false},
-	passwordResetExpires: { type: Date, select: false }
+	passwordResetExpires: { type: Date, select: false } 
 })
 
 UserSchema.pre('save', async function(next){

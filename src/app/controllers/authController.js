@@ -195,7 +195,7 @@ router.put('/edit/:userId', async (req, res) =>{
 
 	try{
 
-		const user = await User.findOneAndUpdate(req.params.userId,{ ...req.body}, {new: true})
+		const user = await User.findByIdAndUpdate(req.params.userId,{ ...req.body}, {new: true})
 
 		return res.send({ user })
 

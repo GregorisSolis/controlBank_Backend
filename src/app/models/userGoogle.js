@@ -7,7 +7,7 @@ const UserGoogleSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     ahorros: { type: String, initialize: 0 },
     salario: { type: String, initialize: 0 },
-    score: {type: Number, initialize: 0}
+    photoProfile: {type: String}
 })
 
 UserGoogleSchema.pre('save', async function (next) {
