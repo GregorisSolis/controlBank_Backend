@@ -189,7 +189,7 @@ router.put('/edit_password/:userId', async (req, res) => {
 
 })
 
-//EDITAR DATOS USER 
+//EDITAR DATOS USER - funciona tambien para usuarios de google
 
 router.put('/edit/:userId', async (req, res) =>{
 
@@ -197,7 +197,12 @@ router.put('/edit/:userId', async (req, res) =>{
 
 		const user = await User.findByIdAndUpdate(req.params.userId,{ ...req.body}, {new: true})
 
-	 res.send({ user })
+		if(user === null){
+			const userGoogle = await UserGoogle.findByIdAndUpdate(req.params.userId,{ ...req.body}, {new: true})
+			res.send({ userGoogle })
+		}else{
+			res.send({ user })
+		}
 
 	}catch(err){
 		res.status(400).send({ error: err })
