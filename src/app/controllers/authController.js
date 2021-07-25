@@ -197,7 +197,7 @@ router.put('/edit/:userId', async (req, res) =>{
 
 		const user = await User.findByIdAndUpdate(req.params.userId,{ ...req.body}, {new: true})
 
-		return res.send({ user })
+	 res.send({ user })
 
 	}catch(err){
 		res.status(400).send({ error: err })
