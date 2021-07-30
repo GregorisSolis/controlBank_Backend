@@ -1,12 +1,12 @@
 const mongoose = require('../../database')
 
 const TransitionSchema = new mongoose.Schema({
-	valor:{ type: String, required: true },
-	typeTransition:{ type: String, required: true},
-	createdAt: {type: Date, default: Date.now},
-	user:{type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-	mesValue:{ type: String, required: true },
-	description: {type: String, required: true}
+	valor: { type: String, required: true },
+	typeTransition: { type: String, required: true },
+	createdAt: { type: Date, default: Date.now },
+	user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+	mesValue: { type: String, required: true },
+	description: { type: String, required: true }
 })
 
 const Transition = mongoose.model('Transition', TransitionSchema)

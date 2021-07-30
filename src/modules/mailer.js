@@ -1,17 +1,15 @@
 const path = require('path')
 const nodemailer = require('nodemailer')
 
-
+const config = require('../config.js')
 const smtpTransport = require('nodemailer-smtp-transport')
 
 const hbs = require('nodemailer-express-handlebars')
 
-const { host, port, user, pass } = require('../config/mail.json')
-
 const transport = nodemailer.createTransport(smtpTransport({
-  host, 
-  port,
-  auth: { user, pass }
+  host: config.NODE_MAILER_HOST,
+  port: config.NODE_MAILER_PORT,
+  auth: { user: config.NODE_MAILER_USER, pass: config.NODE_MAILER_PASS }
 }))
 
 
