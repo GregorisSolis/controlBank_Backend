@@ -23,24 +23,24 @@ router.post('/new-transition', async (req, res) => {
 
 //BUSCAR TYPETRANSITION ESPESIFICA POR USUARIO
 router.get('/transitions/todos/:IDUSER', async (req, res) => {
-	try{
+	try {
 		const trans = await Transition.find({ user: req.params.IDUSER })
 
 		return res.send({ trans })
 	}
-	catch(err){
+	catch (err) {
 		return res.status(400).send({ error: "error loading typeTransition. " })
 	}
 })
 
 //BUSCAR TYPETRANSITION ESPESIFICA
 router.get('/typeTransition/:type/:userId', async (req, res) => {
-	try{
-		const type = await Transition.find({ typeTransition: req.params.type, user: req.params.userId})
+	try {
+		const type = await Transition.find({ typeTransition: req.params.type, user: req.params.userId })
 
 		return res.send({ type })
 	}
-	catch(err){
+	catch (err) {
 		return res.status(400).send({ error: "error loading typeTransition. " })
 	}
 })
@@ -56,7 +56,7 @@ router.get('/todos', async (req, res) => {
 		return res.send({ transitions })
 
 	} catch (err) {
-		return res.status(400).send({ error: "error loading transitions." + err})
+		return res.status(400).send({ error: "error loading transitions." + err })
 	}
 
 })

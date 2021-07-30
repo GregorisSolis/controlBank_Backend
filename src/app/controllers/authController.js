@@ -4,29 +4,28 @@ const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const mailer = require('../../modules/mailer')
 
-const authConfig = require('../../config/auth')
+const config = require('../../config.js')
 const User = require('../models/user')
 const UserGoogle = require('../models/userGoogle')
 
 const router = express.Router()
 
-function generateToken(params = {}){
-  return jwt.sign(params, authConfig.secret, {
+function generateToken(params = {}) {
+	return jwt.sign(params, config.SECRET_APP, {
 		expiresIn: 86400,
-	})}
+	})
+}
 
 
 //REGISTER USER
-router.post('/register', async(req, res) =>{
+router.post('/register', async (req, res) => {
 
 	const { email } = req.body
 
-	try{
+	try {
 
-		if(await UserGoogle.findOne({ email })){
-			if(User.findOne({ email })){
-				return res.status(400).send({ error: 'User already exists.'})
-			}
+		if (await UserGoogle.findOne({ email }) || await User.findOne({ email })) {
+			return res.status(400).send({ error: 'User already exists.' })
 		}
 
 		const user = await User.create(req.body)
@@ -35,53 +34,53 @@ router.post('/register', async(req, res) =>{
 
 		return res.send({
 			user,
-			token: generateToken({id: "Registration Failed."})
+			token: generateToken({ id: "Registration Failed." })
 		})
 	}
-	catch(err){
-		return res.status(400).send({ error: "Registration Failed." + err})
+	catch (err) {
+		return res.status(400).send({ error: "Registration Failed." + err })
 	}
 
 })
 
 //AUTHENTICAR USER
-router.post('/authenticate', async (req, res) =>{
+router.post('/authenticate', async (req, res) => {
 
-	const {email, password } = req.body
+	const { email, password } = req.body
 
 	const user = await User.findOne({ email }).select('+password')
 
-	if(!user){
-		return res.status(400).send({ error: 'User not found'})
+	if (!user) {
+		return res.status(400).send({ error: 'User not found' })
 	}
 
-	if(!await bcrypt.compare(password, user.password)){
-		return res.status(400).send({ error: 'Invalid password'})
+	if (!await bcrypt.compare(password, user.password)) {
+		return res.status(400).send({ error: 'Invalid password' })
 	}
 
 	user.password = undefined
 
 	res.send({
 		user,
-		token: generateToken({ id: user.id})
+		token: generateToken({ id: user.id })
 	})
 })
 
 //MOSTRAR LA INFORMACION DEL USER
-router.get('/info-user/:userId', async(req, res) =>{
+router.get('/info-user/:userId', async (req, res) => {
 
-	try{
+	try {
 
 		const infoUser = await User.findById(req.params.userId)
 
 		return res.send({ infoUser })
 
-	}catch(err){
-		return res.status(400).send({ error: 'error loanding user info.'})
+	} catch (err) {
+		return res.status(400).send({ error: 'error loanding user info.' })
 	}
 })
 
-//recuperar la contrasena - enviar emal para user
+/*/recuperar la contrasena - enviar emal para user
 router.post('/forgot_password', async (req, res) => {
 	const { email } = req.body
 
@@ -160,51 +159,51 @@ router.post('/reset_password', async (req, res) => {
 	catch (err){
 		res.status(400).send({ error: 'Cannot reset password, try again'})
 	}
-})
+})*/
 
 //EDITAR PASS USER
 router.put('/edit_password/:userId', async (req, res) => {
 
-		const { password } = req.body
+	const { password } = req.body
 
-		try{
+	try {
 
-			const user = await User.findById(req.params.userId)
+		const user = await User.findById(req.params.userId)
 			.select('+password')
 
-			if(!user){
-				res.status(400).send({ error:  'user not found'})
-			}
+		if (!user) {
+			res.status(400).send({ error: 'user not found' })
+		}
 
 		user.password = password
 
 		await user.save()
 
-			
-			res.send({ user })
-		}
-		catch(err){
-			res.status(400).send({ Error: err })
-		}
+
+		res.send({ user })
+	}
+	catch (err) {
+		res.status(400).send({ Error: err })
+	}
 
 })
 
 //EDITAR DATOS USER - funciona tambien para usuarios de google
 
-router.put('/edit/:userId', async (req, res) =>{
+router.put('/edit/:userId', async (req, res) => {
 
-	try{
+	try {
 
-		const user = await User.findByIdAndUpdate(req.params.userId,{ ...req.body}, {new: true})
+		const user = await User.findByIdAndUpdate(req.params.userId, { ...req.body }, { new: true })
 
-		if(user === null){
-			const userGoogle = await UserGoogle.findByIdAndUpdate(req.params.userId,{ ...req.body}, {new: true})
+		if (user === null) {
+			const userGoogle = await UserGoogle.findByIdAndUpdate(req.params.userId, { ...req.body }, { new: true })
 			res.send({ userGoogle })
-		}else{
+		} else {
 			res.send({ user })
 		}
 
-	}catch(err){
+	} catch (err) {
 		res.status(400).send({ error: err })
 	}
 
