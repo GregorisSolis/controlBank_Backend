@@ -17,7 +17,7 @@ const PostSchema = new mongoose.Schema({
 	size: Number,
 	key: String,
 	url: String,
-	user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+	user: String,
 	createdAt: {
 		type: Date,
 		default: Date.now

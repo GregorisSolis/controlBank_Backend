@@ -10,8 +10,10 @@ const UserSchema = new mongoose.Schema({
 	salario: { type: String, initialize: 0 },
 	passwordResetToken: { type: String, select: false },
 	passwordResetExpires: { type: Date, select: false },
-	photoProfile: String,
-	photoBanner: String,
+	photoProfileUrl: String,
+	photoBannerUrl: String,
+	keyPhotoProfile: String,
+	keyPhotoBanner: String,
 })
 
 UserSchema.pre('save', async function (next) {
